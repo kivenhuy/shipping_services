@@ -7,6 +7,7 @@ use App\Models\Order;
 use App\Models\Uploads;
 use App\Models\User;
 use Auth;
+use Carbon\Carbon;
 use DB;
 use Http;
 use Illuminate\Http\Request;
@@ -14,6 +15,8 @@ use Illuminate\Pagination\Paginator;
 use Illuminate\Support\Collection;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Facades\Redis;
+
+use function PHPUnit\Framework\isNull;
 
 class OrderShippingController extends Controller
 {
@@ -78,19 +81,43 @@ class OrderShippingController extends Controller
 
     public function show(Request $request, $id)
     {
+        $is_active = 1;
         $order_details = [];
         try
         {
             $upsteamUrl = env('ECOM_URL');
             $signupApiUrl = $upsteamUrl . '/order_detail/'.$id;
             $response = Http::get($signupApiUrl);
+            // dd($response->body());
             $data_response = (json_decode($response)->data);
             $order_details = $data_response->order_details;
         }
         catch(\Exception $exception) {
             
         }
-        return view('seller.orders.show', compact('order_details'));
+
+        $time_remaining = "";
+        if($order_details->shipping_type == "Fast Shipping")
+        {
+            
+            $time_remaining = strtotime($order_details->created_at)+9*60*60 ;
+            $time_now = strtotime(Carbon::now()->addHours(7));
+            if($order_details->shipping_date != null)
+            {
+                $time_remaining = strtotime($order_details->shipping_date);
+            }
+            // dd($order_details->created_at . '-'.$time_remaining. '-' .$time_now);
+            if($time_remaining < $time_now)
+            {
+                $is_active = 0;
+            }
+        }
+        $order_details->time_remaining = $time_remaining;
+        
+        // dd($order_details->shop_address);
+        return view('seller.orders.show', compact('order_details','is_active'));
+        
+        
     }
 
     public function update_status_shipping(Request $request)

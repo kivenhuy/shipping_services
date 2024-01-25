@@ -15,6 +15,13 @@
         <div class="card-header border-bottom-0">
             <h5 class="fs-16 fw-700 text-dark mb-0">{{ translate('Order Summary') }}</h5>
         </div>
+        @if($is_active == 0)
+        <div style="padding-left: 30px">
+            <div class="row notfiy">
+                <i class="fa fa-info-circle" aria-hidden="true"><span style="padding-left: 6px">Delivery time does not meet standards.Order status failed </span></i>
+            </div>
+        </div>
+        @endif
         <div class="card-body">
             <div class="row">
                 
@@ -40,6 +47,12 @@
                                 {{ json_decode($order_details->order->shipping_address)->city }},
                                 {{ json_decode($order_details->order->shipping_address)->postal_code }},
                                 {{ json_decode($order_details->order->shipping_address)->country }}
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="w-50 fw-600">{{ translate('Shop address') }}:</td>
+                            <td>{{ $order_details->shop_address}}
+
                             </td>
                         </tr>
                     </table>
@@ -81,7 +94,11 @@
 
                         <tr>
                             <td class="w-50 fw-600">{{ translate('Time remaining For Shipping') }}:</td>
-                            <td><div class="aiz-count-down align-items-center" data-date="{{ date('Y/m/d H:i:s', strtotime($order_details->shipping_date)) }}"></div></td>
+                            {{-- @if(Auth::user()->carrie_id == 2) --}}
+                                <td><div class="aiz-count-down align-items-center" data-date="{{ date('Y/m/d H:i:s', ($order_details->time_remaining)) }}"></div></td>
+                            {{-- @endif --}}
+                            
+                            {{-- <td><div class="aiz-count-down align-items-center" data-date="{{ date('Y/m/d H:i:s', strtotime($order_details->shipping_date)) }}"></div></td> --}}
                         </tr>
                         
                     </table>
@@ -144,11 +161,11 @@
                                     @endif
                                 </td>
                                 @if ($order_details->delivery_status == 'delivered')
-                                <td>
+                                <td class="text-center"> 
                                         <span class="badge badge-inline badge-success">{{ucfirst(str_replace('_', ' ', $order_details->delivery_status))}}</span>
                                 </td>
                                 @else
-                                <td>
+                                <td class="text-center">
                                     <span class="badge badge-inline badge-warning">
                                         {{ ucfirst(str_replace('_', ' ', $order_details->delivery_status)) }}
                                     </span>
@@ -198,47 +215,48 @@
             </table>
         </div>
         
-
-        <div style="margin-top: 4rem">
-            <form action="{{ route('shipper.update_status_shipping') }}" method="POST" enctype="multipart/form-data" id="final_checkout_form">
-                @csrf
-                <input name="id_order_detail" type="hidden" value="{{$order_details->id}}">
-                @if($order_details->delivery_status == "shipping")
-                    <div class="col-12">
-                        <div class="row mb-3">
-                            <label class="col-md-2 col-form-label">{{ translate('Deliverd Proof Image') }}</label>
-                            <div class="col-md-10">
-                                <div class="input-group" data-toggle="aizuploader" data-type="image">
-                                    <div class="input-group-prepend">
-                                        <div class="input-group-text bg-soft-secondary font-weight-medium">{{ translate('Browse')}}</div>
+        @if($is_active == 1)
+            <div style="margin-top: 4rem">
+                <form action="{{ route('shipper.update_status_shipping') }}" method="POST" enctype="multipart/form-data" id="final_checkout_form">
+                    @csrf
+                    <input name="id_order_detail" type="hidden" value="{{$order_details->id}}">
+                    @if($order_details->delivery_status == "shipping")
+                        <div class="col-12">
+                            <div class="row mb-3">
+                                <label class="col-md-2 col-form-label">{{ translate('Deliverd Proof Image') }}</label>
+                                <div class="col-md-10">
+                                    <div class="input-group" data-toggle="aizuploader" data-type="image">
+                                        <div class="input-group-prepend">
+                                            <div class="input-group-text bg-soft-secondary font-weight-medium">{{ translate('Browse')}}</div>
+                                        </div>
+                                        <div class="form-control file-amount">{{ translate('Choose File') }}</div>
+                                        <input type="hidden" name="proof_image" value="" class="selected-files">
                                     </div>
-                                    <div class="form-control file-amount">{{ translate('Choose File') }}</div>
-                                    <input type="hidden" name="proof_image" value="" class="selected-files">
-                                </div>
-                                <div class="file-preview box sm">
+                                    <div class="file-preview box sm">
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
-                @endif
-                <div class="col-12">
-                    @if($order_details->delivery_status == "waiting")
-                        <input name="shipping_status" type="hidden" value="receive_order">
-                        <button  type="submit" class="btn btn-primary btn-block fw-700 fs-14 rounded-4 EdApprove">Revice Shipping Order</button>
-                    @elseif($order_details->delivery_status == "receive_order")
-                        <input name="shipping_status" type="hidden" value="order_picking">
-                        <button  type="submit" class="btn btn-primary btn-block fw-700 fs-14 rounded-4 EdApprove">Order Picking</button>
-                    @elseif($order_details->delivery_status == "order_picking")
-                        <input name="shipping_status" type="hidden" value="shipping">
-                        <button  type="submit" class="btn btn-primary btn-block fw-700 fs-14 rounded-4 EdApprove">Shipping</button>
-                    @elseif($order_details->delivery_status == "shipping")
-                        <input name="shipping_status" type="hidden" value="delivered">
-                        <button  type="button" class="btn btn-success btn-block fw-700 fs-14 rounded-4 EdApprove" onclick="submitOrder(this)">Deliverd</button>
-                    @else
                     @endif
-                </div>
-            </form>
-        </div>
+                    <div class="col-12">
+                        @if($order_details->delivery_status == "waiting")
+                            <input name="shipping_status" type="hidden" value="receive_order">
+                            <button  type="submit" class="btn btn-primary btn-block fw-700 fs-14 rounded-4 EdApprove">Revice Shipping Order</button>
+                        @elseif($order_details->delivery_status == "receive_order")
+                            <input name="shipping_status" type="hidden" value="order_picking">
+                            <button  type="submit" class="btn btn-primary btn-block fw-700 fs-14 rounded-4 EdApprove">Order Picking</button>
+                        @elseif($order_details->delivery_status == "order_picking")
+                            <input name="shipping_status" type="hidden" value="shipping">
+                            <button  type="submit" class="btn btn-primary btn-block fw-700 fs-14 rounded-4 EdApprove">Shipping</button>
+                        @elseif($order_details->delivery_status == "shipping")
+                            <input name="shipping_status" type="hidden" value="delivered">
+                            <button  type="button" class="btn btn-success btn-block fw-700 fs-14 rounded-4 EdApprove" onclick="submitOrder(this)">Deliverd</button>
+                        @else
+                        @endif
+                    </div>
+                </form>
+            </div>
+        @endif
     </div>
 
     
@@ -251,6 +269,13 @@
             bottom:0 !important;
             top:0 !important;
             display:block !important; 
+        }
+        .notfiy
+        {
+            color: red;
+            font-weight: 700;
+            font-size: 16px;
+            font-family: 'Roboto', sans-serif;
         }
     </style>
 @endsection
