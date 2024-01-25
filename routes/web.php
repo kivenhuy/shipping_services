@@ -41,10 +41,10 @@ Route::group(['middleware' => ['auth']], function () {
 
     Route::controller(HomeController::class)->group(function () {
         Route::get('/', 'index')->name('homepage');
-        Route::get('/product/{slug}', 'product')->name('product');
-        Route::get('/comming-soon', 'comming_soon')->name('comming-soon');
-        Route::get('/shop/{slug}', 'shop')->name('shop.visit');
-        Route::get('/category/{category_slug}', 'listingByCategory')->name('products.category');
+        // Route::get('/product/{slug}', 'product')->name('product');
+        // Route::get('/comming-soon', 'comming_soon')->name('comming-soon');
+        // Route::get('/shop/{slug}', 'shop')->name('shop.visit');
+        // Route::get('/category/{category_slug}', 'listingByCategory')->name('products.category');
     });
 
     Route::controller(HomeController::class)->group(function () {
