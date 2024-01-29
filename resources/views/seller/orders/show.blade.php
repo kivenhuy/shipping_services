@@ -91,16 +91,16 @@
                                 @endif
                             </td>
                         </tr>
-
-                        <tr>
-                            <td class="w-50 fw-600">{{ translate('Time remaining For Shipping') }}:</td>
-                            {{-- @if(Auth::user()->carrie_id == 2) --}}
-                                <td><div class="aiz-count-down align-items-center" data-date="{{ date('Y/m/d H:i:s', ($order_details->time_remaining)) }}"></div></td>
-                            {{-- @endif --}}
-                            
-                            {{-- <td><div class="aiz-count-down align-items-center" data-date="{{ date('Y/m/d H:i:s', strtotime($order_details->shipping_date)) }}"></div></td> --}}
-                        </tr>
-                        
+                        @if($order_details->shipping_type != "Normal Shipping")
+                            <tr>
+                                <td class="w-50 fw-600">{{ translate('Time remaining For Shipping') }}:</td>
+                                {{-- @if(Auth::user()->carrie_id == 2) --}}
+                                    <td><div class="aiz-count-down align-items-center" data-date="{{ date('Y/m/d H:i:s', ($order_details->time_remaining)) }}"></div></td>
+                                {{-- @endif --}}
+                                
+                                {{-- <td><div class="aiz-count-down align-items-center" data-date="{{ date('Y/m/d H:i:s', strtotime($order_details->shipping_date)) }}"></div></td> --}}
+                            </tr>
+                        @endif
                     </table>
                 </div>
             </div>
@@ -163,6 +163,10 @@
                                 @if ($order_details->delivery_status == 'delivered')
                                 <td class="text-center"> 
                                         <span class="badge badge-inline badge-success">{{ucfirst(str_replace('_', ' ', $order_details->delivery_status))}}</span>
+                                </td>
+                                @elseif ($order_details->delivery_status == 'fail')
+                                <td class="text-center"> 
+                                        <span class="badge badge-inline badge-danger">{{ucfirst(str_replace('_', ' ', $order_details->delivery_status))}}</span>
                                 </td>
                                 @else
                                 <td class="text-center">

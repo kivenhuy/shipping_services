@@ -99,7 +99,6 @@ class OrderShippingController extends Controller
         $time_remaining = "";
         if($order_details->shipping_type == "Fast Shipping")
         {
-            
             $time_remaining = strtotime($order_details->created_at)+9*60*60 ;
             $time_now = strtotime(Carbon::now()->addHours(7));
             if($order_details->shipping_date != null)
@@ -113,7 +112,7 @@ class OrderShippingController extends Controller
             }
         }
         $order_details->time_remaining = $time_remaining;
-        
+        // dd($order_details);
         // dd($order_details->shop_address);
         return view('seller.orders.show', compact('order_details','is_active'));
         

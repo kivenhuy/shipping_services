@@ -61,7 +61,14 @@
                                     
                                     @endif
                                     <td>
-                                        {{ ucfirst(str_replace('_', ' ', $order_details->delivery_status)) }}
+                                        @if ($order_details->delivery_status == 'delivered')
+                                            <span class="badge badge-inline badge-success">{{ ucfirst(str_replace('_', ' ', $order_details->delivery_status)) }}</span>
+                                        @elseif($order_details->delivery_status == 'fail')
+                                            <span class="badge badge-inline badge-danger">{{ ucfirst(str_replace('_', ' ', $order_details->delivery_status)) }}</span>
+                                        @else
+                                        <span class="badge badge-inline badge-warning">{{ ucfirst(str_replace('_', ' ', $order_details->delivery_status)) }}</span>
+                                        @endif
+                                        
                                     </td>
                                     <td>
                                         {{ ucfirst(str_replace('_', ' ', $order_details->order->payment_type)) }}
