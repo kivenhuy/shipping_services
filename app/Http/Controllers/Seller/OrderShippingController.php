@@ -111,6 +111,13 @@ class OrderShippingController extends Controller
                 $is_active = 0;
             }
         }
+        else
+        {
+            if($order_details->shipping_date != null)
+            {
+                $time_remaining = strtotime($order_details->shipping_date);
+            }
+        }
         $order_details->time_remaining = $time_remaining;
         // dd($order_details);
         // dd($order_details->shop_address);

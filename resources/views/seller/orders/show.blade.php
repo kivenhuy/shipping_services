@@ -63,6 +63,12 @@
                             <td class="w-50 fw-600">{{ translate('Order date') }}:</td>
                             <td>{{ date('d-m-Y H:i A', strtotime($order_details->order->order_date)) }}</td>
                         </tr>
+                        @if($order_details->time_remaining != "")
+                        <tr>
+                            <td class="w-50 fw-600">{{ translate('Shipping date') }}:</td>
+                            <td>{{ date('d-m-Y H:i A', ($order_details->time_remaining)) }}</td>
+                        </tr>
+                        @endif
                         <tr>
                             <td class="w-50 fw-600">{{ translate('Order status') }}:</td>
                             <td>Success</td>
