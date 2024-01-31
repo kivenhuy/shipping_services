@@ -92,6 +92,10 @@ class LoginController extends Controller
         if (auth()->attempt($credential)) {
             $user = Auth::user();
             $carrier_data = [];
+            $total_order = 0;
+            $total_deliverd = 0;
+            $total_fail_deliverd = 0;
+            $total_shipping_cost = 0;
             try
             {
                 $upsteamUrl = env('ECOM_URL');
@@ -105,7 +109,30 @@ class LoginController extends Controller
             catch(\Exception $exception) {
                 
             }
+            try
+            {
+                $upsteamUrl = env('ECOM_URL');
+                $signupApiUrl = $upsteamUrl . '/get_dashboard/'.$user->id;
+                $response = Http::get($signupApiUrl);
+                // dd(json_decode($response)->body());
+                $data_response = (json_decode($response)->data);
+                if($data_response)
+                {
+                    $total_order = $data_response->total_order;
+                    $total_deliverd = $data_response->total_deliverd;
+                    $total_fail_deliverd = $data_response->total_fail_deliverd;
+                    $total_shipping_cost = $data_response->total_shipping_cost;
+                }
+                // $shipper = $data_response->shipper;
+            }
+            catch(\Exception $exception) {
+                
+            }
             Session::put('carrier_data', $carrier_data);
+            Session::put('total_order', $total_order);
+            Session::put('total_deliverd', $total_deliverd);
+            Session::put('total_fail_deliverd', $total_fail_deliverd);
+            Session::put('total_shipping_cost', $total_shipping_cost);
             return redirect()->route('shipper.dashboard');
             
         }
