@@ -15,7 +15,7 @@
         <div class="card-header border-bottom-0">
             <h5 class="fs-16 fw-700 text-dark mb-0">{{ translate('Order Summary') }}</h5>
         </div>
-        @if($is_active == 0)
+        @if($is_active == 0 && $order_details->delivery_status != 'delivered')
         <div style="padding-left: 30px">
             <div class="row notfiy">
                 <i class="fa fa-info-circle" aria-hidden="true"><span style="padding-left: 6px">Delivery time does not meet standards.Order status failed </span></i>
