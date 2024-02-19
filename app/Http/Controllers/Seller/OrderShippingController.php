@@ -18,7 +18,7 @@ use Illuminate\Support\Facades\Redis;
 
 use function PHPUnit\Framework\isNull;
 
-class OrderShippingController extends Controller
+class  OrderShippingController extends Controller
 {
     /**
      * Display a listing of the resource to seller.
@@ -152,14 +152,18 @@ class OrderShippingController extends Controller
         catch(\Exception $exception) {
             
         }
-        if($data_response)
+        if($data_response == 1)
         {
             flash(translate('Update status shipping order successfully'))->success();
             
         }
+        elseif($data_response == 2)
+        {
+            flash(translate('The order has exceeded the delivery time'))->error();
+        }
         else
         {
-            flash(translate('Something went wrong'))->warning();
+            flash(translate('Something went wrong'))->error();
         }
         
         return back();
