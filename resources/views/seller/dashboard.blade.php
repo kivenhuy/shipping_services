@@ -17,12 +17,12 @@
 
     <div class="row">
         <div class="col-sm-6 col-md-6 col-lg-3 mb-4">
-            <div class="card shadow-none bg-soft-primary">
+            <div class="card shadow-none bg-soft-primary" style="height: 100%">
                 <div class="card-body">
                     <div class="card-title text-primary fs-16 fw-600">
                         {{ translate('Shipping Amount') }}
                     </div>
-                    <p class="mt-4">
+                    <p class="mt-4" style="font-size: 20px">
                         {{ single_price(Session::get('total_shipping_cost')) }}
                     </p>
                 </div>

@@ -116,6 +116,7 @@ class LoginController extends Controller
                 $response = Http::get($signupApiUrl);
                 // dd(json_decode($response)->body());
                 $data_response = (json_decode($response)->data);
+                // dd($data_response);
                 if($data_response)
                 {
                     $total_order = $data_response->total_order;
@@ -123,7 +124,7 @@ class LoginController extends Controller
                     $total_fail_deliverd = $data_response->total_fail_deliverd;
                     $total_shipping_cost = $data_response->total_shipping_cost;
                 }
-                // $shipper = $data_response->shipper;
+                $shipper = $data_response->shipper;
             }
             catch(\Exception $exception) {
                 
