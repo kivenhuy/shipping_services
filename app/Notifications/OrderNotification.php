@@ -51,13 +51,12 @@ class OrderNotification extends Notification
      */
     public function toArray(object $notifiable): array
     {
-        $shipper_name = $this->details['shipper_name'];
+        // $shipper_name = $this->details['shipper_name'];
         
         
         return [
             'order_detail_id'      => $this->details['order_detail_id'],
-            'shipper_name'    => $this->details['shipper_name'],
-            'status'        => $this->details['status'],
+            'customer_name'    => $this->details['customer_name'],
         ];
     }
 }

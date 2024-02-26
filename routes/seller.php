@@ -15,6 +15,7 @@ Route::group(['middleware' => ['auth']], function () {
         Route::get('/shipper/profile', 'profile')->name('shipper.profile.index');
         Route::get('/shipper/shop/verify', 'verify')->name('shipper.shop.verify');
         Route::get("/shipper/logout", [LoginController::class, 'logout'])->name('shipper.logout'); 
+        Route::post("/shipper/notification",'notification')->name('shipper.notification'); 
     });
 
     Route::controller(ProductController::class)->group(function () {

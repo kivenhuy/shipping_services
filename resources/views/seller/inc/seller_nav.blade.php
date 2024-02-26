@@ -27,21 +27,16 @@
                         </div>
                         <div class=" c-scrollbar-light overflow-auto " style="max-height:300px;">
                             <ul class="list-group list-group-flush">
-                                @forelse(Auth::user()->unreadNotifications->take(20) as $notification)
+                                @forelse(Auth::user()->unreadNotifications as $notification)
                                     <li class="list-group-item d-flex justify-content-between align-items- py-3">
                                         <div class="media text-inherit">
                                             <div class="media-body">
-                                                @if($notification->type == 'App\Notifications\WelcomeNotification')
+                                                @if($notification->type == 'App\Notifications\OrderNotification')
                                                     <p class="mb-1 text-truncate-2">
-                                                        <a href="{{route('request_for_product.get_details_data',['id'=>$notification->data['request_id']])}}">
-                                                            @if($notification->data['status'] === 0)
-                                                                {{$notification->data['user_id']}} {{translate('has new request product,request code: ')}} {{$notification->data['request_code']}}
-                                                            @elseif($notification->data['status'] === 1)
-                                                                {{translate('Admin has approve for request product, request code: ')}} {{$notification->data['request_code']}}
-                                                            @elseif($notification->data['status'] === 3)
-                                                                {{$notification->data['user_id']}} {{translate('has approve price for request product, request code: ')}} {{$notification->data['request_code']}}
-                                                            @else
-                                                            @endif
+                                                        <a href="{{route('shipper.orders.show',['id'=>$notification->data['order_detail_id']])}}">
+                                                            
+                                                            {{translate('You have a new order from a customer ')}} {{$notification->data['customer_name']}} {{translate(' click to see detail')}}
+                                                           
                                                         </a>
                                                     </p>
                                                     <small class="text-muted">

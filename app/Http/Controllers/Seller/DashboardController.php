@@ -3,15 +3,19 @@
 namespace App\Http\Controllers\Seller;
 
 use App\Http\Controllers\Controller;
+use App\Models\User;
+use App\Notifications\OrderNotification;
 use Http;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Notification;
 use Session;
 
 class DashboardController extends Controller
 {
     public function index()
     {
+        // dd(Auth::user()->unreadNotifications);
         $shop = Auth::user();
         $user = Auth::user();
         $total_order = 0;
@@ -45,5 +49,32 @@ class DashboardController extends Controller
         Session::put('total_shipping_cost', $total_shipping_cost);
         // dd(Session::get('carrier_data'));
         return view('seller.dashboard', compact('shop'));
+    }
+
+
+    public function notification(Request $request)
+    {
+        // dd($request->all());
+        $shipper = User::where([['carrier_id',$request->carrier_id],['approved',1]]);
+        if($request->customer_type == "enterprise")
+        {
+            $shipper = $shipper->whereHas('shipper_detail', function($q){
+                $q->where('vehicle', '!=', 'motorbike');
+            })->get();
+        }
+        else
+        {
+            
+            $shipper = $shipper->whereHas('shipper_detail', function($q){
+                $q->where('vehicle', 'motorbike');
+            })->get();
+        }
+        // dd(count($shipper));
+        $shipping_notic =
+        [
+            'order_detail_id'=>$request->order_detail_id,
+            'customer_name'=>$request->customer_name,
+        ];
+        Notification::send($shipper, new OrderNotification($shipping_notic));
     }
 }

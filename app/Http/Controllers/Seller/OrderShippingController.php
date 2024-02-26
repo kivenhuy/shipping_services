@@ -118,10 +118,18 @@ class  OrderShippingController extends Controller
                 $time_remaining = strtotime($order_details->shipping_date);
             }
         }
+        $nowDate = Carbon::now();
+        $can_ship = 1;
+        $date_harvest = Carbon::parse($order_details->shipping_date);
+        // dd($date_harvest->diffInDays($nowDate));
+        if($date_harvest->diffInDays($nowDate)>0)
+        {
+            $can_ship = 0;
+        }
         $order_details->time_remaining = $time_remaining;
         // dd($order_details);
         // dd($order_details->shop_address);
-        return view('seller.orders.show', compact('order_details','is_active'));
+        return view('seller.orders.show', compact('order_details','is_active','can_ship'));
         
         
     }
@@ -160,6 +168,10 @@ class  OrderShippingController extends Controller
         elseif($data_response == 2)
         {
             flash(translate('The order has exceeded the delivery time'))->error();
+        }
+        elseif($data_response == 3)
+        {
+            flash(translate('The order has been received by another shipper' ))->error();
         }
         else
         {

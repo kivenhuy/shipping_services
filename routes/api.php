@@ -12,6 +12,7 @@ use App\Http\Controllers\Api\ShipperController;
 use App\Http\Controllers\Api\ShippingOrderController;
 use App\Http\Controllers\Api\SuggestProductController;
 use App\Http\Controllers\Api\UploadsProductController;
+use App\Http\Controllers\Seller\DashboardController;
 use App\Http\Controllers\UploadsController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -34,6 +35,10 @@ Route::group(['prefix' => 'v2'], function () {
         Route::get('/get_all_shipper', 'index')->name('get_all_shipper.index');
         Route::get('/detail_shipper/{id}', 'shipper_detail')->name('get_all_shipper.detail_shipper');
         Route::post('/approval_shipper', 'approval_shipper')->name('get_all_shipper.approval_shipper');
+    });
+
+    Route::controller(DashboardController::class)->group(function () {
+        Route::post("/shipper/notification",'notification')->name('shipper.notification'); 
     });
 
     
