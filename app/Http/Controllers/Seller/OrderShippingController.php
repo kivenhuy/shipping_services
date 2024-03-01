@@ -105,7 +105,7 @@ class  OrderShippingController extends Controller
             {
                 $time_remaining = strtotime($order_details->shipping_date);
             }
-            // dd($order_details->created_at . '-'.$time_remaining. '-' .$time_now);
+            // dd($time_remaining . '-'.$time_now);
             if($time_remaining < $time_now)
             {
                 $is_active = 0;
@@ -127,7 +127,7 @@ class  OrderShippingController extends Controller
             $can_ship = 0;
         }
         $order_details->time_remaining = $time_remaining;
-        // dd($order_details);
+        // dd($can_ship.'-'.$is_active);
         // dd($order_details->shop_address);
         return view('seller.orders.show', compact('order_details','is_active','can_ship'));
         

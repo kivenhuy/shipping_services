@@ -15,17 +15,18 @@
         <div class="card-header border-bottom-0">
             <h5 class="fs-16 fw-700 text-dark mb-0">{{ translate('Order Summary') }}</h5>
         </div>
-        @if($can_ship == 0)
-            <div style="padding-left: 30px">
-                <div class="row notfiy">
-                    <i class="fa fa-info-circle" aria-hidden="true"><span style="padding-left: 6px">Delivery date is scheduled for {{ date('d-m-Y H:i A', ($order_details->time_remaining)) }}. Please come back on that date so it can be done </span></i>
-                </div>
-            </div>
-        @else
-            @if($is_active == 0 && $order_details->delivery_status != 'delivered')
+        @if($is_active == 0 && $order_details->delivery_status != 'delivered')
             <div style="padding-left: 30px">
                 <div class="row notfiy">
                     <i class="fa fa-info-circle" aria-hidden="true"><span style="padding-left: 6px">Delivery time does not meet standards.Order status failed </span></i>
+                </div>
+            </div>
+        
+        @else
+            @if($can_ship == 0)
+            <div style="padding-left: 30px">
+                <div class="row notfiy">
+                    <i class="fa fa-info-circle" aria-hidden="true"><span style="padding-left: 6px">Delivery date is scheduled for {{ date('d-m-Y H:i A', ($order_details->time_remaining)) }}. Please come back on that date so it can be done </span></i>
                 </div>
             </div>
             @endif
